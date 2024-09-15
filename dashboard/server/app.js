@@ -11,10 +11,11 @@ app.use(cookieParser());
 // app.use(cors());
 
 const user = require('./Routes/userRoutes.js');
-
+const auth = require('./Routes/authRoutes.js');
 // Routes
 
 app.use('/', user);
+app.use('/', auth);
 
 const PORT = process.env.PORT || 3000;
 
