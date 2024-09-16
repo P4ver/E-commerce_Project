@@ -45,30 +45,49 @@ const register = async(req, res)=>{
 }
 
 
-// const login = async (req, res) => {
-//     const { name, password } = req.body;
+const login = async (req, res) => {
+    const { name, password } = req.body;
 
-//     pool.getConnection((err, connection) => {
-//         if (err) throw err;
-//         const query = 'SELECT * FROM user WHERE username = ?'
-//         connection.query(query ,[name], async (err, result) => {
-//             connection.release();
+    pool.getConnection((err, connection) => {
+        if (err) throw err;
+        const query = 'SELECT * FROM user WHERE login_User = ?'
+        connection.query(query ,[name], async (err, result) => {
+            connection.release();
 
-//             if (err) {
-//                 // console.error(err);
-//                 return res.status(500).json({ message: 'Server Error' });
-//             }
+            if (err) {
+                // console.error(err);
+                return res.status(500).json({ message: 'Server Error, went wrong during login' });
+            }
 
-//             if (result.length === 0) {
-//                 return res.status(401).json({ message: 'Identity incorrect' });
-//             }
+            if (result.length === 0) {
+                return res.status(401).json({ message: 'Identity incorrect' });
+            }
 
-//             const {username, password} = result[0];
-//             console.log("result login : ", result);
-//             console.log("Password entered by user : ", password);
-//             console.log("Hashed password from database : ", password_User);
-//         })
-//     })
-// }
+            const {login_User, password_User} = result[0];
+            console.log("result login : ", result);
+            console.log("Password entered by user : ", password);
+            console.log("Hashed password from database : ", password_User);
+            
+            // const isPasswordValid = await bcrypt.compare(password, password_User);
+            const isPasswordValid = await bcrypt.compare(password, password_User);
+            console.log("Is password valid : ", isPasswordValid);
+            if (!isPasswordValid) {
+                return res.status(401).json({message: "identity incorrect"});
+            }
 
-module.exports = register;
+            const token = jwt.sign({ login_User }, 'my_secret_key', { expiresIn: '24h' });
+            res.cookie('jwt', token, {httpOnly:true, maxAge: 86400000, secure: false})
+            res.json({ message:"logged in successfully" });
+        });
+    });
+}
+
+const logout = (req, res) => {
+    // Clear the cookie that holds the JWT
+    res.clearCookie('jwt');
+    res.json({ message: 'Logged out successfully' });
+};
+
+
+
+module.exports = {login, logout, register};
