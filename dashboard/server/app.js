@@ -12,10 +12,14 @@ app.use(cookieParser());
 
 const user = require('./Routes/userRoutes.js');
 const auth = require('./Routes/authRoutes.js');
+const product = require('./Routes/productRoutes.js');
+const order = require('./Routes/orderRoutes.js');
 // Routes
 
 app.use('/', user);
 app.use('/', auth);
+app.use('/', product);
+app.use('/', order);
 
 const PORT = process.env.PORT || 3000;
 
