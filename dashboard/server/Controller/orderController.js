@@ -13,16 +13,30 @@ const getOrders = (req, res) => {
     });
 };
 
+// const createOrder = (req, res) => {
+//     const { total, status } = req.body;
+//     const query = 'INSERT INTO orders ( total, status) VALUES (?, ?)';
+
+//     pool.getConnection((err, connection) => {
+//         if (err) throw err;
+//         connection.query(query, [total, status], (err, result) => {
+//             connection.release();
+//             if (err) throw err;
+//             res.status(201).json({ id: result.insertId, total, status });
+//         });
+//     });
+// };
+
 const createOrder = (req, res) => {
-    const { total, status } = req.body;
-    const query = 'INSERT INTO orders ( total, status) VALUES (?, ?)';
+    const { customer_id, total_amount, status } = req.body;
+    const query = 'INSERT INTO orders (customer_id, total_amount, status) VALUES (?, ?, ?)';
 
     pool.getConnection((err, connection) => {
         if (err) throw err;
-        connection.query(query, [total, status], (err, result) => {
+        connection.query(query, [customer_id, total_amount, status], (err, result) => {
             connection.release();
             if (err) throw err;
-            res.status(201).json({ id: result.insertId, total, status });
+            res.status(201).json({ id: result.insertId, customer_id, total_amount, status });
         });
     });
 };
@@ -47,14 +61,34 @@ const deleteOrder = (req, res) => {
 };
 
 
+// const updateOrder = (req, res) => {
+//     const { id } = req.params;
+//     const { total, status } = req.body;
+//     const query = 'UPDATE orders SET total = ?, status = ? WHERE id = ?';
+
+//     pool.getConnection((err, connection) => {
+//         if (err) throw err;
+//         connection.query(query, [total, status, id], (err, result) => {
+//             connection.release();
+//             if (err) throw err;
+
+//             if (result.affectedRows === 0) {
+//                 return res.status(404).json({ message: 'Order not found' });
+//             }
+
+//             res.status(200).json({ message: 'Order updated successfully' });
+//         });
+//     });
+// };
+
 const updateOrder = (req, res) => {
     const { id } = req.params;
-    const { total, status } = req.body;
-    const query = 'UPDATE orders SET total = ?, status = ? WHERE id = ?';
+    const { customer_id, total_amount, status } = req.body;
+    const query = 'UPDATE orders SET customer_id = ?, total_amount = ?, status = ? WHERE id = ?';
 
     pool.getConnection((err, connection) => {
         if (err) throw err;
-        connection.query(query, [total, status, id], (err, result) => {
+        connection.query(query, [customer_id, total_amount, status, id], (err, result) => {
             connection.release();
             if (err) throw err;
 
