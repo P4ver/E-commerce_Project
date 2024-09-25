@@ -93,7 +93,7 @@ const Login = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(loginUser({ name, password }))
-    // .unwrap()
+    .unwrap()
       .then(() => {
         navigate('/dashboard'); // Redirect to dashboard after login
       })
@@ -175,7 +175,7 @@ const Login = () => {
   
             <p className="mt-10 text-center text-sm text-gray-500">
               Not a member?{' '}
-              <a href="#" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
+              <a href="/register" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
                 Start a 14 day free trial
               </a>
             </p>

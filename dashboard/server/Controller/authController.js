@@ -77,7 +77,10 @@ const login = async (req, res) => {
 
             const token = jwt.sign({ login_User }, 'my_secret_key', { expiresIn: '24h' });
             res.cookie('jwt', token, {httpOnly:true, maxAge: 86400000, secure: false})
-            res.json({ message:"logged in successfully" });
+            res.json({ 
+                message:"logged in successfully",
+                login_User_BE: login_User  
+            });
         });
     });
 }
