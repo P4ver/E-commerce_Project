@@ -8,7 +8,11 @@ const cors = require('cors');
 
 app.use(bodyParser.json());
 app.use(cookieParser());
-// app.use(cors());
+app.use(cors({
+  origin: ['http://localhost:5173'],
+  credentials: true,
+
+}));
 
 const user = require('./Routes/userRoutes.js');
 const auth = require('./Routes/authRoutes.js');
