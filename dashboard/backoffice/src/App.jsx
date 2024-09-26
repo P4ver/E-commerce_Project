@@ -2,9 +2,11 @@ import { useState } from 'react'
 import './App.css'
 import Login from './component/login'
 import Register from './component/register'
-import { BrowserRouter , Route, Routes } from 'react-router-dom';
 import Dashboard from './component/dashboard';
 import PrivateRoute from './component/privateRoute';
+import Layout from './component/layout';
+import { BrowserRouter , Route, Routes } from 'react-router-dom';
+import ProductComponent from './component/ProductComponent';
 
 function App() {
   return (
@@ -13,7 +15,10 @@ function App() {
         <Routes>
           <Route exact path="/" element={<Login />} />
           <Route exact path="/register" element={<Register />} />
-          <Route path="/dashboard" element={<PrivateRoute> <Dashboard /> </PrivateRoute>}/>
+          <Route element={<Layout />}>
+            <Route path="/dashboard" element={<PrivateRoute> <Dashboard /> </PrivateRoute>}/>
+            <Route path="/products" element={<PrivateRoute> <ProductComponent /> </PrivateRoute>}/>
+          </Route>
           {/* <Route exact path="/dashboard" element={<Dashboard />} /> */}
           {/* <Route exact path="/cart" element={<Cart />} /> */}
           {/* <Route exact path="/checkout" element={<Checkout />} /> */}
