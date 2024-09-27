@@ -130,7 +130,7 @@ const CustomerComponent = () => {
       <Dialog open={isAddOpen} onClose={() => setIsAddOpen(false)}>
         <DialogTitle>Add New Customer</DialogTitle>
         <DialogContent
-          sx={{ height: '250px', width:'600px', display: 'flex', flexDirection: 'column', gap: '9px' }}
+          sx={{ height: '310px', width:'600px', display: 'flex', flexDirection: 'column', gap: '9px' }}
         >
           <TextField
             label="Customer Name"
@@ -154,6 +154,15 @@ const CustomerComponent = () => {
             label="Customer Mail"
             name="email"
             value={newCustomer.email}
+            onChange={handleInputChange}
+            variant="outlined"
+            fullWidth
+            className="mb-2"
+          />
+          <TextField
+            label="Customer Address"
+            name="address"
+            value={newCustomer.address}
             onChange={handleInputChange}
             variant="outlined"
             fullWidth
