@@ -7,6 +7,7 @@ import PrivateRoute from './component/privateRoute';
 import Layout from './component/layout';
 import { BrowserRouter , Route, Routes } from 'react-router-dom';
 import ProductComponent from './component/ProductComponent';
+import CustomerComponent from './component/CustomerComponent';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route element={<Layout />}>
             <Route path="/dashboard" element={<PrivateRoute> <Dashboard /> </PrivateRoute>}/>
             <Route path="/products" element={<PrivateRoute> <ProductComponent /> </PrivateRoute>}/>
+            <Route path="/customer" element={<PrivateRoute> <CustomerComponent /> </PrivateRoute>}/>
           </Route>
           {/* <Route exact path="/dashboard" element={<Dashboard />} /> */}
           {/* <Route exact path="/cart" element={<Cart />} /> */}
