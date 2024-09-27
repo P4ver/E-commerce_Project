@@ -52,6 +52,23 @@ const ProductComponent = () => {
     setEditProduct(product);
   };
 
+  // const updatedAt = new Date(product.updated_at).toLocaleString('en-GB', {
+  //   day: '2-digit',
+  //   month: '2-digit',
+  //   year: 'numeric',
+  //   hour: '2-digit',
+  //   minute: '2-digit',
+  // });
+  const org_date=(product_Date)=>{
+    return new Date(product_Date).toLocaleString('en-GB', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  }
+
   return (
     <div>
       <h2 className="text-xl font-bold mb-4">Product List</h2>
@@ -101,6 +118,9 @@ const ProductComponent = () => {
             <tr>
               <th className="border border-gray-300 px-4 py-2">Name</th>
               <th className="border border-gray-300 px-4 py-2">Price</th>
+              <th className="border border-gray-300 px-4 py-2">description</th>
+              <th className="border border-gray-300 px-4 py-2">Created At</th>
+              <th className="border border-gray-300 px-4 py-2">Updated At</th>
               <th className="border border-gray-300 px-4 py-2">Actions</th>
             </tr>
           </thead>
@@ -109,6 +129,9 @@ const ProductComponent = () => {
               <tr key={product.id}>
                 <td className="border border-gray-300 px-2">{product.name}</td>
                 <td className="border border-gray-300 px-2">${product.price}</td>
+                <td className="border border-gray-300 px-2">{product.description}</td>
+                <td className="border border-gray-300 px-2">{org_date(product.created_at)}</td>
+                <td className="border border-gray-300 px-2">{org_date(product.updated_at)}</td>
                 <td className="border border-gray-300 px-2">
                   <button
                     onClick={() => selectProductForEdit(product)}
