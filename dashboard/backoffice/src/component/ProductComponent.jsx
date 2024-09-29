@@ -14,9 +14,13 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  MenuItem,
+  Select,
+  InputLabel,
+  FormControl
 } from '@mui/material';
-import { fetchProducts, addProduct, updateProduct, deleteProduct } from '../redux/productSile';
-
+import { fetchProducts, addProduct, updateProduct, deleteProduct, getProductsByCategory } from '../redux/productSile';
+import { fetchCategories, assignCategoryToProductThunk} from '../redux/categorySlice'
 const ProductComponent = () => {
   const dispatch = useDispatch();
   
@@ -24,11 +28,16 @@ const ProductComponent = () => {
   const [editProduct, setEditProduct] = useState(null);
   const [isAddOpen, setIsAddOpen] = useState(false); // State to control Add Product dialog
   const [isEditOpen, setIsEditOpen] = useState(false); // State to control Edit Product dialog
+  const [selectedCategory, setSelectedCategory] = useState(''); // State for category selection
+  const [categoryAssignments, setCategoryAssignments] = useState({});
+
 
   const { products, status, error } = useSelector((state) => state.products);
-
+  const { categories } = useSelector((state) => state.categories); // Assuming categories are in the category slice
+console.log("==> category selection", categories)
   useEffect(() => {
     dispatch(fetchProducts());
+    dispatch(fetchCategories());
   }, [dispatch]);
 
   // Handle form inputs
@@ -69,6 +78,35 @@ const ProductComponent = () => {
     setIsEditOpen(true);
   };
 
+  // Handle category selection
+  const handleCategoryChange = (e) => {
+    setSelectedCategory(e.target.value);
+    if (e.target.value) {
+      dispatch(getProductsByCategory(e.target.value)); // Dispatch action to filter products by category
+    } else {
+      dispatch(fetchProducts()); // Fetch all products if no category is selected
+    }
+  };
+
+  const handleCategoryAssignmentChange = (productId, categoryId) => {
+    setCategoryAssignments({
+      ...categoryAssignments,
+      [productId]: categoryId
+    });
+  };
+  
+  const assignCategoryToProduct = (productId) => {
+    const categoryId = categoryAssignments[productId];
+console.log("productId ", productId)
+console.log("categoryid ", categoryId)
+    if (categoryId) {
+
+      // dispatch(assignCategoryToProductThunk({ id: productId, updatedData: { category_id: categoryId } }));
+      dispatch(assignCategoryToProductThunk({ product_id: productId, category_id: categoryId }));
+      dispatch(fetchProducts()); // Refresh product list after assignment
+    }
+  };
+  
   // Format date
   const formatDate = (productDate) => {
     return new Date(productDate).toLocaleString('en-GB', {
@@ -83,6 +121,27 @@ const ProductComponent = () => {
   return (
     <div>
       <h2 className="text-xl font-bold mb-4">Product List</h2>
+
+    {/* Category selection */}
+    <FormControl fullWidth variant="outlined" className="mb-4">
+        <InputLabel id="category-label">Select Category</InputLabel>
+        <Select
+          labelId="category-label"
+          id="category-select"
+          value={selectedCategory}
+          onChange={handleCategoryChange}
+          label="Select Category"
+        >
+          <MenuItem value="">
+            <em>All Products</em>
+          </MenuItem>
+          {categories.map((category) => (
+            <MenuItem key={category.id} value={category.id}>
+              {category.name}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
 
       {/* Button to trigger Add Product popup */}
       <Button variant="contained" color="primary" onClick={() => setIsAddOpen(true)}>
@@ -115,6 +174,33 @@ const ProductComponent = () => {
                   <TableCell>{product.description}</TableCell>
                   <TableCell>{formatDate(product.created_at)}</TableCell>
                   <TableCell>{formatDate(product.updated_at)}</TableCell>
+                  <TableCell>
+        <FormControl fullWidth>
+          <Select
+            value={categoryAssignments[product.id] || ''}
+            onChange={(e) => handleCategoryAssignmentChange(product.id, e.target.value)}
+            displayEmpty
+          >
+            <MenuItem value="">
+              <em>None</em>
+            </MenuItem>
+            {categories.map((category) => (
+              <MenuItem key={category.id} value={category.id}>
+                {category.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => assignCategoryToProduct(product.id)}
+          sx={{ marginTop: '8px' }}
+        >
+          Assign
+        </Button>
+      </TableCell>
+
                   <TableCell>
                     <Button
                       variant="contained"

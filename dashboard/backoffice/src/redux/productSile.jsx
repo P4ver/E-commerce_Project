@@ -43,6 +43,16 @@ export const deleteProduct = createAsyncThunk('products/delete', async (id, thun
   }
 });
 
+// Async action to fetch products by category
+export const getProductsByCategory = createAsyncThunk('products/fetchByCategory', async (categoryId, thunkAPI) => {
+  try {
+    const response = await axios.get(`${API_LINK}/categories/${categoryId}/products`);
+    return response.data;
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error.response.data.message);
+  }
+});
+
 const productSlice = createSlice({
   name: 'products',
   initialState: {
@@ -107,6 +117,18 @@ const productSlice = createSlice({
         state.products = state.products.filter(product => product.id !== action.payload.id); // Remove the deleted product
       })
       .addCase(deleteProduct.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
+      })
+      // Get products by category
+      .addCase(getProductsByCategory.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(getProductsByCategory.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.products = action.payload; // Set the products filtered by category
+      })
+      .addCase(getProductsByCategory.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload;
       });
