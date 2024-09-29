@@ -80,6 +80,24 @@ const assignCategoryToProduct = (req, res) => {
         });
     });
 };
+// Get products by category ID
+const getProductsByCategory = (req, res) => {
+    const { category_id } = req.params; // Extract category_id from the request parameters
+    pool.getConnection((err, connection) => {
+        if (err) throw err;
+        const query = `
+            SELECT p.*
+            FROM products p
+            JOIN product_categories pc ON p.id = pc.product_id
+            WHERE pc.category_id = ?
+        `;
+        connection.query(query, [category_id], (err, rows) => {
+            connection.release();
+            if (err) throw err;
+            res.json(rows); // Return the products assigned to the category
+        });
+    });
+};
 
 module.exports = {
     getCategories,
@@ -88,4 +106,5 @@ module.exports = {
     updateCategory,
     deleteCategory,
     assignCategoryToProduct,
+    getProductsByCategory
 };
