@@ -20,7 +20,7 @@ import { fetchCustomers, addCustomer, updateCustomer, deleteCustomer } from '../
 const CustomerComponent = () => {
   const dispatch = useDispatch();
   
-  const [newCustomer, setNewCustomer] = useState({ name: '', phone: '', email: '', phone:'', address:'' });
+  const [newCustomer, setNewCustomer] = useState({ name: '', phone: '', email: '', address:'' });
   const [editCustomer, setEditCustomer] = useState(null);
   const [isAddOpen, setIsAddOpen] = useState(false); // State to control Add Customer dialog
   const [isEditOpen, setIsEditOpen] = useState(false); // State to control Edit Customer dialog
@@ -44,7 +44,7 @@ const CustomerComponent = () => {
   // Add a new customer
   const handleAddCustomer = async () => {
     await dispatch(addCustomer(newCustomer));
-    setNewCustomer({ name: '', phone: '', email: '', phone:'', address:'' });
+    setNewCustomer({ name: '', phone: '', email: '', address:'' });
     setIsAddOpen(false); // Close the Add Customer dialog
     dispatch(fetchCustomers());
   };
