@@ -175,31 +175,31 @@ console.log("categoryid ", categoryId)
                   <TableCell>{formatDate(product.created_at)}</TableCell>
                   <TableCell>{formatDate(product.updated_at)}</TableCell>
                   <TableCell>
-        <FormControl fullWidth>
-          <Select
-            value={categoryAssignments[product.id] || ''}
-            onChange={(e) => handleCategoryAssignmentChange(product.id, e.target.value)}
-            displayEmpty
-          >
-            <MenuItem value="">
-              <em>None</em>
-            </MenuItem>
-            {categories.map((category) => (
-              <MenuItem key={category.id} value={category.id}>
-                {category.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => assignCategoryToProduct(product.id)}
-          sx={{ marginTop: '8px' }}
-        >
-          Assign
-        </Button>
-      </TableCell>
+                    <FormControl fullWidth>
+                      <Select
+                        value={categoryAssignments[product.id] || ''}
+                        onChange={(e) => handleCategoryAssignmentChange(product.id, e.target.value)}
+                        displayEmpty
+                      >
+                        <MenuItem value="">
+                          <em>None</em>
+                        </MenuItem>
+                        {categories.map((category) => (
+                          <MenuItem key={category.id} value={category.id}>
+                            {category.name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={() => assignCategoryToProduct(product.id)}
+                      sx={{ marginTop: '8px' }}
+                    >
+                      Assign
+                    </Button>
+                  </TableCell>
 
                   <TableCell>
                     <Button
