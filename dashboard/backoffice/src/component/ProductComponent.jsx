@@ -21,6 +21,9 @@ import {
 } from '@mui/material';
 import { fetchProducts, addProduct, updateProduct, deleteProduct, getProductsByCategory } from '../redux/productSile';
 import { fetchCategories, assignCategoryToProductThunk} from '../redux/categorySlice'
+import { MdEdit } from "react-icons/md";
+import { MdDelete } from "react-icons/md";
+
 const ProductComponent = () => {
   const dispatch = useDispatch();
   
@@ -34,7 +37,7 @@ const ProductComponent = () => {
 
   const { products, status, error } = useSelector((state) => state.products);
   const { categories } = useSelector((state) => state.categories); // Assuming categories are in the category slice
-console.log("==> category selection", categories)
+  console.log("==> category selection", categories)
   useEffect(() => {
     dispatch(fetchProducts());
     dispatch(fetchCategories());
@@ -163,6 +166,7 @@ console.log("categoryid ", categoryId)
                 <TableCell>Description</TableCell>
                 <TableCell>Created At</TableCell>
                 <TableCell>Updated At</TableCell>
+                <TableCell>Category</TableCell>
                 <TableCell>Actions</TableCell>
               </TableRow>
             </TableHead>
@@ -182,7 +186,9 @@ console.log("categoryid ", categoryId)
                         displayEmpty
                       >
                         <MenuItem value="">
-                          <em>None</em>
+                          {/* <em>None</em> */}
+                          {product.id} = 
+                          {categories.find((cat) => cat.id === product.category_id)?.name || <em>None</em>}
                         </MenuItem>
                         {categories.map((category) => (
                           <MenuItem key={category.id} value={category.id}>
@@ -202,21 +208,31 @@ console.log("categoryid ", categoryId)
                   </TableCell>
 
                   <TableCell>
-                    <Button
+                    {/* <Button
                       variant="contained"
                       color="warning"
                       onClick={() => selectProductForEdit(product)}
                       className="mr-2"
                     >
-                      Edit
-                    </Button>
-                    <Button
+                    </Button> */}
+                    <button 
+                      onClick={() => selectProductForEdit(product)}
+                      className="mr-2">
+                      <MdEdit />
+                    </button>
+                    <button
+                      color="error"
+                      onClick={() => handleDeleteProduct(product.id)}
+                    >
+                      <MdDelete/>
+                    </button>
+                    {/* <Button
                       variant="contained"
                       color="error"
                       onClick={() => handleDeleteProduct(product.id)}
                     >
                       Delete
-                    </Button>
+                    </Button> */}
                   </TableCell>
                 </TableRow>
               ))}
