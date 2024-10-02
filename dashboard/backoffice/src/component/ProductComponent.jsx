@@ -19,20 +19,20 @@ import {
   InputLabel,
   FormControl
 } from '@mui/material';
-import { fetchProducts, addProduct, updateProduct, deleteProduct, getProductsByCategory } from '../redux/productSile';
-import { fetchCategories, assignCategoryToProductThunk} from '../redux/categorySlice'
+import { fetchProducts, addProduct, updateProduct, deleteProduct } from '../redux/productSile';
+import { fetchCategories} from '../redux/categorySlice'
 import { MdEdit } from "react-icons/md";
 import { MdDelete } from "react-icons/md";
 
 const ProductComponent = () => {
   const dispatch = useDispatch();
   
-  const [newProduct, setNewProduct] = useState({ name: '', price: '', description:'' });
+  const [newProduct, setNewProduct] = useState({ name: '', price: '', description: '', category_id: '' }); // Include category_id
   const [editProduct, setEditProduct] = useState(null);
   const [isAddOpen, setIsAddOpen] = useState(false); // State to control Add Product dialog
   const [isEditOpen, setIsEditOpen] = useState(false); // State to control Edit Product dialog
   const [selectedCategory, setSelectedCategory] = useState(''); // State for category selection
-  const [categoryAssignments, setCategoryAssignments] = useState({});
+  // const [categoryAssignments, setCategoryAssignments] = useState({});
 
 
   const { products, status, error } = useSelector((state) => state.products);
@@ -56,7 +56,7 @@ const ProductComponent = () => {
   // Add a new product
   const handleAddProduct = async () => {
     await dispatch(addProduct(newProduct));
-    setNewProduct({ name: '', price: '', description:'' });
+    setNewProduct({ name: '', price: '', description: '', category_id: '' }); // Reset form
     setIsAddOpen(false); // Close the Add Product dialog
     dispatch(fetchProducts());
   };
@@ -84,32 +84,17 @@ const ProductComponent = () => {
   // Handle category selection
   const handleCategoryChange = (e) => {
     setSelectedCategory(e.target.value);
-    if (e.target.value) {
-      dispatch(getProductsByCategory(e.target.value)); // Dispatch action to filter products by category
-    } else {
-      dispatch(fetchProducts()); // Fetch all products if no category is selected
-    }
+    // if (e.target.value) {
+    //   dispatc(e.target.value)); // Dispatch action to filter products by category
+    // } else {
+    //   dispatch(fetchProducts()); // Fetch all products if no category is selected
+    // }
   };
 
-  const handleCategoryAssignmentChange = (productId, categoryId) => {
-    setCategoryAssignments({
-      ...categoryAssignments,
-      [productId]: categoryId
-    });
+    // Handle category selection for the new product
+  const handleCategorySelectChange = (e) => {
+    setNewProduct({ ...newProduct, category_id: e.target.value });
   };
-  
-  const assignCategoryToProduct = (productId) => {
-    const categoryId = categoryAssignments[productId];
-console.log("productId ", productId)
-console.log("categoryid ", categoryId)
-    if (categoryId) {
-
-      // dispatch(assignCategoryToProductThunk({ id: productId, updatedData: { category_id: categoryId } }));
-      dispatch(assignCategoryToProductThunk({ product_id: productId, category_id: categoryId }));
-      dispatch(fetchProducts()); // Refresh product list after assignment
-    }
-  };
-  
   // Format date
   const formatDate = (productDate) => {
     return new Date(productDate).toLocaleString('en-GB', {
@@ -167,10 +152,11 @@ console.log("categoryid ", categoryId)
                 <TableCell>Created At</TableCell>
                 <TableCell>Updated At</TableCell>
                 <TableCell>Category</TableCell>
+                {/* <TableCell>CategoryEDT</TableCell> */}
                 <TableCell>Actions</TableCell>
               </TableRow>
             </TableHead>
-            <TableBody>
+            {/* <TableBody>
               {products.map((product) => (
                 <TableRow key={product.id}>
                   <TableCell>{product.name}</TableCell>
@@ -178,43 +164,8 @@ console.log("categoryid ", categoryId)
                   <TableCell>{product.description}</TableCell>
                   <TableCell>{formatDate(product.created_at)}</TableCell>
                   <TableCell>{formatDate(product.updated_at)}</TableCell>
+                  <TableCell>{categories.find((cat) => cat.id === product.category_id)?.name || <em>None</em>}</TableCell>
                   <TableCell>
-                    <FormControl fullWidth>
-                      <Select
-                        value={categoryAssignments[product.id] || ''}
-                        onChange={(e) => handleCategoryAssignmentChange(product.id, e.target.value)}
-                        displayEmpty
-                      >
-                        <MenuItem value="">
-                          {/* <em>None</em> */}
-                          {product.id} = 
-                          {categories.find((cat) => cat.id === product.category_id)?.name || <em>None</em>}
-                        </MenuItem>
-                        {categories.map((category) => (
-                          <MenuItem key={category.id} value={category.id}>
-                            {category.name}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={() => assignCategoryToProduct(product.id)}
-                      sx={{ marginTop: '8px' }}
-                    >
-                      Assign
-                    </Button>
-                  </TableCell>
-
-                  <TableCell>
-                    {/* <Button
-                      variant="contained"
-                      color="warning"
-                      onClick={() => selectProductForEdit(product)}
-                      className="mr-2"
-                    >
-                    </Button> */}
                     <button 
                       onClick={() => selectProductForEdit(product)}
                       className="mr-2">
@@ -226,17 +177,37 @@ console.log("categoryid ", categoryId)
                     >
                       <MdDelete/>
                     </button>
-                    {/* <Button
-                      variant="contained"
-                      color="error"
-                      onClick={() => handleDeleteProduct(product.id)}
-                    >
-                      Delete
-                    </Button> */}
                   </TableCell>
                 </TableRow>
               ))}
+            </TableBody> */}
+            <TableBody>
+              {products
+                .filter((product) =>
+                  selectedCategory ? product.category_id === selectedCategory : true
+                )
+                .map((product) => (
+                  <TableRow key={product.id}>
+                    <TableCell>{product.name}</TableCell>
+                    <TableCell>${product.price}</TableCell>
+                    <TableCell>{product.description}</TableCell>
+                    <TableCell>{formatDate(product.created_at)}</TableCell>
+                    <TableCell>{formatDate(product.updated_at)}</TableCell>
+                    <TableCell>
+                      {categories.find((cat) => cat.id === product.category_id)?.name || <em>None</em>}
+                    </TableCell>
+                    <TableCell>
+                      <button onClick={() => selectProductForEdit(product)} className="mr-2">
+                        <MdEdit />
+                      </button>
+                      <button color="error" onClick={() => handleDeleteProduct(product.id)}>
+                        <MdDelete />
+                      </button>
+                    </TableCell>
+                  </TableRow>
+                ))}
             </TableBody>
+
           </Table>
         </TableContainer>
       )}
@@ -275,6 +246,21 @@ console.log("categoryid ", categoryId)
             fullWidth
             className="mb-2"
           />
+          <FormControl fullWidth>
+            <InputLabel id="add-category-label">Category</InputLabel>
+            <Select
+              labelId="add-category-label"
+              value={newProduct.category_id}
+              onChange={handleCategorySelectChange}
+              label="Category"
+            >
+              {categories.map((category) => (
+                <MenuItem key={category.id} value={category.id}>
+                  {category.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleAddProduct} variant="contained" color="primary">
@@ -324,6 +310,22 @@ console.log("categoryid ", categoryId)
                 variant="outlined"
                 fullWidth
               />
+              <FormControl fullWidth>
+                <InputLabel id="edit-category-label">Category</InputLabel>
+                <Select
+                  labelId="edit-category-label"
+                  name="category_id"
+                  value={editProduct.category_id}
+                  onChange={handleInputChange}
+                  label="Category"
+                >
+                  {categories.map((category) => (
+                    <MenuItem key={category.id} value={category.id}>
+                      {category.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </>
           )}
         </DialogContent>

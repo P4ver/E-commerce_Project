@@ -16,6 +16,8 @@ import {
   DialogTitle,
 } from '@mui/material';
 import { fetchCustomers, addCustomer, updateCustomer, deleteCustomer } from '../redux/customerSlice';
+import { MdEdit } from "react-icons/md";
+import { MdDelete } from "react-icons/md";
 
 const CustomerComponent = () => {
   const dispatch = useDispatch();
@@ -103,21 +105,12 @@ const CustomerComponent = () => {
                   <TableCell>{customer.email}</TableCell>
                   <TableCell>{customer.address}</TableCell>
                   <TableCell>
-                    <Button
-                      variant="contained"
-                      color="warning"
-                      onClick={() => selectCustomerForEdit(customer)}
-                      className="mr-2"
-                    >
-                      Edit
-                    </Button>
-                    <Button
-                      variant="contained"
-                      color="error"
-                      onClick={() => handleDeleteCustomer(customer.id)}
-                    >
-                      Delete
-                    </Button>
+                    <button onClick={() => selectCustomerForEdit(customer)} className="mr-2">
+                      <MdEdit />
+                    </button>
+                    <button color="error" onClick={() => handleDeleteCustomer(customer.id)}>
+                      <MdDelete />
+                    </button>
                   </TableCell>
                 </TableRow>
               ))}
