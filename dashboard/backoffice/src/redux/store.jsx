@@ -7,6 +7,8 @@ import authReducer from './authSlice';
 import productReducer from './productSile'; // Import the new product reducer
 import customerReducer from './customerSlice'
 import categoryReducer from './categorySlice'
+import orderReducer from './orderSlice';
+import orderItemsReducer from './orderItemsSlice';
 const persistConfig = {
   key: 'root',
   storage,
@@ -17,7 +19,9 @@ const rootReducer = {
   auth: authReducer,
   products: productReducer,
   customers: customerReducer, 
-  categories: categoryReducer, 
+  categories: categoryReducer,
+  orders: orderReducer,
+  orderItems: orderItemsReducer,
 };
 
 const persistedReducer = persistReducer(persistConfig, combineReducers(rootReducer));

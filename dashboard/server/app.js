@@ -20,6 +20,7 @@ const product = require('./Routes/productRoutes.js');
 const order = require('./Routes/orderRoutes.js');
 const customer = require('./Routes/customerRoutes.js');
 const categories = require('./Routes/categoryRoutes.js');
+const orderItems = require('./Routes/orderItemsRoutes.js');
 // Routes
 
 app.use('/', user);
@@ -28,6 +29,7 @@ app.use('/', product);
 app.use('/', order);
 app.use('/', customer);
 app.use('/', categories);
+app.use('/', orderItems);
 
 const PORT = process.env.PORT || 3000;
 
