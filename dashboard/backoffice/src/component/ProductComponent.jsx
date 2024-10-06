@@ -23,11 +23,11 @@ import { fetchProducts, addProduct, updateProduct, deleteProduct } from '../redu
 import { fetchCategories} from '../redux/categorySlice'
 import { MdEdit } from "react-icons/md";
 import { MdDelete } from "react-icons/md";
-
+import { API_LINK } from '../API_LINK';
 const ProductComponent = () => {
   const dispatch = useDispatch();
   
-  const [newProduct, setNewProduct] = useState({ name: '', price: '', description: '', category_id: '' }); // Include category_id
+  const [newProduct, setNewProduct] = useState({ name: '', price: '', description: '', category_id: '', image: null, image: null }); // Include category_id
   const [editProduct, setEditProduct] = useState(null);
   const [isAddOpen, setIsAddOpen] = useState(false); // State to control Add Product dialog
   const [isEditOpen, setIsEditOpen] = useState(false); // State to control Edit Product dialog
@@ -55,15 +55,30 @@ const ProductComponent = () => {
 
   // Add a new product
   const handleAddProduct = async () => {
-    await dispatch(addProduct(newProduct));
-    setNewProduct({ name: '', price: '', description: '', category_id: '' }); // Reset form
+    const formData = new FormData();
+    formData.append('name', newProduct.name);
+    formData.append('price', newProduct.price);
+    formData.append('description', newProduct.description);
+    formData.append('category_id', newProduct.category_id);
+    formData.append('image', newProduct.image); // Append the image file
+    await dispatch(addProduct(formData));
+    setNewProduct({ name: '', price: '', description: '', category_id: '', image: null }); // Reset form
     setIsAddOpen(false); // Close the Add Product dialog
     dispatch(fetchProducts());
   };
 
   // Update an existing product
   const handleUpdateProduct = async (id) => {
-    await dispatch(updateProduct({ id, updatedData: editProduct }));
+    const formData = new FormData();
+    formData.append('name', editProduct.name);
+    formData.append('price', editProduct.price);
+    formData.append('description', editProduct.description);
+    formData.append('category_id', editProduct.category_id);
+    
+    if (editProduct.image) {
+      formData.append('image', editProduct.image); // Append the new image if selected
+    }
+    await dispatch(updateProduct({ id, updatedData: formData }));
     setEditProduct(null);
     setIsEditOpen(false); // Close the Edit Product dialog
     dispatch(fetchProducts());
@@ -146,6 +161,7 @@ const ProductComponent = () => {
           <Table>
             <TableHead>
               <TableRow>
+                <TableCell></TableCell>
                 <TableCell>Name</TableCell>
                 <TableCell>Price</TableCell>
                 <TableCell>Description</TableCell>
@@ -188,6 +204,9 @@ const ProductComponent = () => {
                 )
                 .map((product) => (
                   <TableRow key={product.id}>
+                    <TableCell>
+                      <img src={`${API_LINK}/${product.image}`} alt="" />
+                    </TableCell>
                     <TableCell>{product.name}</TableCell>
                     <TableCell>${product.price}</TableCell>
                     <TableCell>{product.description}</TableCell>
@@ -261,6 +280,13 @@ const ProductComponent = () => {
               ))}
             </Select>
           </FormControl>
+          <TextField
+            type="file" // Set type to file
+            onChange={(e) => setNewProduct({ ...newProduct, image: e.target.files[0] })} // Set the selected file in state
+            variant="outlined"
+            fullWidth
+            // inputProps={{ accept: 'image/*' }} // Allow only image files
+          />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleAddProduct} variant="contained" color="primary">
@@ -326,6 +352,13 @@ const ProductComponent = () => {
                   ))}
                 </Select>
               </FormControl>
+              <TextField
+                type="file" 
+                onChange={(e) => setEditProduct({ ...editProduct, image: e.target.files[0] })}
+                variant="outlined"
+                fullWidth
+                sx={{ marginBottom: '16px' }}
+              />
             </>
           )}
         </DialogContent>
