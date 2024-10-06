@@ -3,6 +3,10 @@ const app = express();
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
+const path = require('path');
+
+
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Middleware
 
