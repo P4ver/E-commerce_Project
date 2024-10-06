@@ -4,7 +4,8 @@ import { fetchProducts } from '../redux/productSile';
 import { fetchCategories } from '../redux/categorySlice';
 import ProductCard from './ProductCard';
 import CategoryCard from './categoryCard';
-
+import Slide from './Slider';
+import delevry from './images/delevry.jpg';
 function Home() {
   const dispatch = useDispatch();
   const { products, status, error } = useSelector((state) => state.products);
@@ -33,7 +34,12 @@ function Home() {
   : products;
 
   return (
-    <div className="home flex p-4">
+    <>
+      <div className='flex justify-center'>
+        <Slide/>
+        {/* <img className='w-96' src={delevry} alt="" /> */}
+      </div>
+      <div className="home flex p-4">
       {/* Sidebar for Categories */}
       <div className="sidebar w-1/4 pr-4 max-h-screen sticky top-4 overflow-y-auto hide-scrollbar">
         <h2 className="text-xl font-bold mb-4">Categories</h2>
@@ -78,7 +84,8 @@ function Home() {
           ))}
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 }
 

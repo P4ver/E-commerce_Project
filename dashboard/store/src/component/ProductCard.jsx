@@ -43,30 +43,3 @@ function ProductCard({ product }) {
 }
 
 export default ProductCard;
-
-// import React from 'react';
-// import { Link } from 'react-router-dom';
-
-// function ProductCard({ product }) {
-//   return (
-//     <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300">
-//       <img
-//         className="w-full h-64 object-cover"
-//         src={product.imageUrl}
-//         alt={product.name}
-//       />
-//       <div className="p-4">
-//         <h3 className="text-lg font-semibold text-gray-800 truncate">{product.name}</h3>
-//         <p className="mt-2 text-gray-600">${product.price}</p>
-//         <Link
-//           to={`/product/${product.id}`}
-//           className="mt-4 inline-block text-white bg-blue-600 hover:bg-blue-500 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 transition-all duration-200"
-//         >
-//           View Details...
-//         </Link>
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default ProductCard;
