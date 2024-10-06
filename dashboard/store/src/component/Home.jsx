@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchProducts } from '../redux/productSile';
 import { fetchCategories } from '../redux/categorySlice';
@@ -9,6 +9,8 @@ function Home() {
   const dispatch = useDispatch();
   const { products, status, error } = useSelector((state) => state.products);
   const { categories } = useSelector((state) => state.categories);
+
+  const [selectedCategory, setSelectedCategory] = useState(null);
 
   useEffect(() => {
     dispatch(fetchProducts()); // Fetch products when the component mounts
@@ -23,6 +25,13 @@ function Home() {
     return <p>Error: {error}</p>;
   }
 
+  const handleCategoryClick = (categoryId) => {
+    setSelectedCategory(categoryId);
+  };
+  const filteredProducts = selectedCategory
+  ? products.filter((product) => product.category_id === selectedCategory)
+  : products;
+
   return (
     <div className="home flex p-4">
       {/* Sidebar for Categories */}
@@ -30,7 +39,11 @@ function Home() {
         <h2 className="text-xl font-bold mb-4">Categories</h2>
         <div className="grid grid-cols-2 gap-4 mb-8">
           {categories.map((category) => (
-            <CategoryCard key={category.id} name={category.name} />
+            <CategoryCard
+                key={category.id}
+                name={category.name}
+                onClick={() => handleCategoryClick(category.id)}
+                />
           ))}
         </div>
 
@@ -60,7 +73,7 @@ function Home() {
       <div className="products w-3/4">
         <h2 className="text-xl font-bold mb-4">Products</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-          {products.map((product) => (
+          {filteredProducts.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>
