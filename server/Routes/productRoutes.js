@@ -12,7 +12,7 @@ router.get('/products/:id', getProductById);
 router.post('/products', upload.single('image'),createProduct);
 
 // Update a product
-router.put('/products/:id', updateProduct);
+router.put('/products/:id', upload.single('image'),updateProduct);
 
 // Delete a product
 router.delete('/products/:id', deleteProduct);

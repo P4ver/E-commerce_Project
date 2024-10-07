@@ -38,33 +38,6 @@ const getProductById = (req, res) => {
     });
 };
 
-
-// Create a new product with category_id
-// const createProduct = (req, res) => {
-//     const { name, price, description, category_id } = req.body;  // Include category_id in the request body
-//     pool.getConnection((err, connection) => {
-//         if (err) throw err;
-
-//         // Include category_id in the insert query
-//         connection.query(
-//             'INSERT INTO products (name, price, description, category_id) VALUES (?, ?, ?, ?)', 
-//             [name, price, description, category_id], 
-//             (err, result) => {
-//                 connection.release();
-//                 if (err) throw err;
-
-//                 res.send({
-//                     id: result.insertId, 
-//                     name, 
-//                     price, 
-//                     description, 
-//                     category_id  // Return category_id in the response
-//                 });
-//             }
-//         );
-//     });
-// };
-
 const fs = require('fs');
 const path = require('path');
 const multer = require('multer');
@@ -110,71 +83,33 @@ const createProduct = (req, res) => {
 };
 
 
-
-// Update a product with category_id
-// const updateProduct = (req, res) => {
-//     const { id } = req.params;
-//     const { name, price, description, category_id } = req.body;
-//     pool.getConnection((err, connection) => {
-//         if (err) throw err;
-//         connection.query(
-//             'UPDATE products SET name = ?, price = ?, description = ?, category_id = ? WHERE id = ?',
-//             [name, price, description, category_id, id],
-//             (err, result) => {
-//                 connection.release();
-//                 if (err) throw err;
-//                 res.send({ id, name, price, description, category_id });
-//             }
-//         );
-//     });
-// };
-
-// Update a product with category_id
 const updateProduct = (req, res) => {
     const { id } = req.params;
     const { name, price, description, category_id } = req.body;
-    let image = null;
-
-    // Check if an image is uploaded
-    if (req.file) {
-        image = path.join('uploads', req.file.filename).replace(/\\/g, '/');
-    }
-
-    console.log('Updating product:', { id, name, price, description, category_id, image });
+    const image = req.file ? `uploads/${req.file.filename}` : null; // Get the new image if uploaded
 
     pool.getConnection((err, connection) => {
-        if (err) {
-            console.error('Database connection error:', err);
-            return res.status(500).send('Database connection error');
-        }
+        if (err) throw err;
 
-        // Prepare the query for updating the product
-        const query = `
-            UPDATE products 
-            SET name = ?, price = ?, description = ?, category_id = ?${image ? ', image = ?' : ''} 
-            WHERE id = ?
-        `;
-        
-        // Collect the parameters for the query
-        const params = [name, price, description, category_id];
+        // Check if an image is provided for the update
+        let query = 'UPDATE products SET name = ?, price = ?, description = ?, category_id = ?';
+        let queryParams = [name, price, description, category_id, id];
+
         if (image) {
-            params.push(image); // Add the image to the parameters if it exists
+            query += ', image = ?'; // Add image to the query if provided
+            queryParams.splice(4, 0, image); // Insert the image before the 'id'
         }
-        params.push(id); // Add the ID to the parameters
 
-        console.log('Executing query:', query, 'with parameters:', params);
+        query += ' WHERE id = ?';
 
-        connection.query(query, params, (err, result) => {
+        connection.query(query, queryParams, (err, result) => {
             connection.release();
-            if (err) {
-                console.error('Query execution error:', err);
-                return res.status(500).send('Error executing query');
-            }
-            res.send({ id, name, price, description, category_id, image });
+            if (err) throw err;
+
+            res.send({ id, name, price, description, category_id, image: image ? `/${image}` : null });
         });
     });
 };
-
 
 // Delete a product
 const deleteProduct = (req, res) => {
