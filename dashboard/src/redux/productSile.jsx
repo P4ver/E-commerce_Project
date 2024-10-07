@@ -26,7 +26,11 @@ export const addProduct = createAsyncThunk('products/add', async (productData, t
 // Async action to update a product
 export const updateProduct = createAsyncThunk('products/update', async ({ id, updatedData }, thunkAPI) => {
   try {
-    const response = await axios.put(`${API_LINK}/products/${id}`, updatedData);
+    const response = await axios.put(`${API_LINK}/products/${id}`, updatedData,{
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
     return response.data;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response.data.message);

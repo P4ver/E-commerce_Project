@@ -27,7 +27,7 @@ import { API_LINK } from '../API_LINK';
 const ProductComponent = () => {
   const dispatch = useDispatch();
   
-  const [newProduct, setNewProduct] = useState({ name: '', price: '', description: '', category_id: '', image: null, image: null }); // Include category_id
+  const [newProduct, setNewProduct] = useState({ name: '', price: '', description: '', category_id: '', image: null }); // Include category_id
   const [editProduct, setEditProduct] = useState(null);
   const [isAddOpen, setIsAddOpen] = useState(false); // State to control Add Product dialog
   const [isEditOpen, setIsEditOpen] = useState(false); // State to control Edit Product dialog
@@ -38,6 +38,7 @@ const ProductComponent = () => {
   const { products, status, error } = useSelector((state) => state.products);
   const { categories } = useSelector((state) => state.categories); // Assuming categories are in the category slice
   console.log("==> category selection", categories)
+  console.log("==> products selection", products)
   useEffect(() => {
     dispatch(fetchProducts());
     dispatch(fetchCategories());
@@ -75,10 +76,17 @@ const ProductComponent = () => {
     formData.append('description', editProduct.description);
     formData.append('category_id', editProduct.category_id);
     
-    if (editProduct.image) {
-      formData.append('image', editProduct.image); // Append the new image if selected
+    if (typeof editProduct.image !== 'string' && editProduct.image) {
+      formData.append('image', editProduct.image); // Only append if it's a file
     }
-    await dispatch(updateProduct({ id, updatedData: formData }));
+    
+    for (let pair of formData.entries()) {
+      console.log(`${pair[0]}: ${pair[1]}`);
+    }
+  
+    console.log("formData", formData);
+    console.log("editProduct", editProduct);
+    await dispatch(updateProduct({ id, updatedData: editProduct }));
     setEditProduct(null);
     setIsEditOpen(false); // Close the Edit Product dialog
     dispatch(fetchProducts());
@@ -161,7 +169,7 @@ const ProductComponent = () => {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell></TableCell>
+                <TableCell>k</TableCell>
                 <TableCell>Name</TableCell>
                 <TableCell>Price</TableCell>
                 <TableCell>Description</TableCell>
@@ -172,31 +180,6 @@ const ProductComponent = () => {
                 <TableCell>Actions</TableCell>
               </TableRow>
             </TableHead>
-            {/* <TableBody>
-              {products.map((product) => (
-                <TableRow key={product.id}>
-                  <TableCell>{product.name}</TableCell>
-                  <TableCell>${product.price}</TableCell>
-                  <TableCell>{product.description}</TableCell>
-                  <TableCell>{formatDate(product.created_at)}</TableCell>
-                  <TableCell>{formatDate(product.updated_at)}</TableCell>
-                  <TableCell>{categories.find((cat) => cat.id === product.category_id)?.name || <em>None</em>}</TableCell>
-                  <TableCell>
-                    <button 
-                      onClick={() => selectProductForEdit(product)}
-                      className="mr-2">
-                      <MdEdit />
-                    </button>
-                    <button
-                      color="error"
-                      onClick={() => handleDeleteProduct(product.id)}
-                    >
-                      <MdDelete/>
-                    </button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody> */}
             <TableBody>
               {products
                 .filter((product) =>
