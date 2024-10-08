@@ -11,7 +11,7 @@ function ProductCard({ product }) {
           loading="lazy"
           decoding="async"
           className="product-image object-contain absolute h-full w-full left-0 top-0 right-0 bottom-0"
-          src={product.imageUrl}
+          src={product.image}
         />
         {/* Discount Badge */}
         <div className="absolute top-3 right-3 rounded bg-blue-500 px-1.5 text-xs font-semibold leading-6 text-white">
@@ -20,8 +20,8 @@ function ProductCard({ product }) {
       </div>
       <header className="p-3 md:p-6">
         <div className="mb-2 flex items-center">
-          <span className="text-sm font-semibold text-gray-800 md:text-base">${product.price}</span>
-          <del className="text-xs text-gray-500 ltr:ml-2 rtl:mr-2 md:text-sm">$132.00</del>
+          <span className="text-sm font-semibold text-gray-800 md:text-base">${product.price} </span>
+          <del className="text-xs text-gray-500 ltr:ml-2 rtl:mr-2 md:text-sm"> $132.00</del>
         </div>
         <h3 className="mb-4 cursor-pointer truncate text-xs text-gray-800 md:text-sm">{product.name}</h3>
         <div>

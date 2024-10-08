@@ -12,7 +12,8 @@ function Home() {
   const { categories } = useSelector((state) => state.categories);
 
   const [selectedCategory, setSelectedCategory] = useState(null);
-
+  const [isCategoryVisible, setIsCategoryVisible] = useState(true);
+  
   useEffect(() => {
     dispatch(fetchProducts()); // Fetch products when the component mounts
     dispatch(fetchCategories()); // Fetch categories when the component mounts
@@ -33,47 +34,40 @@ function Home() {
   ? products.filter((product) => product.category_id === selectedCategory)
   : products;
 
+
+  const toggleCategoryVisibility = () => {
+    setIsCategoryVisible((prev) => !prev); // Toggle the visibility
+  };
   return (
     <>
       <div className='flex justify-center'>
         <Slide/>
         {/* <img className='w-96' src={delevry} alt="" /> */}
       </div>
+      
+      {/* Button to toggle category visibility */}
+      <button 
+        onClick={toggleCategoryVisibility} 
+        className="mb-4 bg-blue-500 text-white px-4 py-2 rounded"
+      >
+        {isCategoryVisible ? 'Hide Categories' : 'Show Categories'}
+      </button>
       <div className="home flex p-4">
       {/* Sidebar for Categories */}
-      <div className="sidebar w-1/4 pr-4 max-h-screen sticky top-4 overflow-y-auto hide-scrollbar">
-        <h2 className="text-xl font-bold mb-4">Categories</h2>
-        <div className="grid grid-cols-2 gap-4 mb-8">
-          {categories.map((category) => (
-            <CategoryCard
+      {isCategoryVisible && (
+        <div className="sidebar w-1/4 pr-4 max-h-screen sticky top-4 overflow-y-auto hide-scrollbar ">
+          <h2 className="text-xl font-bold mb-4">Categories</h2>
+          <div className="grid grid-cols-1 text-center md:grid-cols-2 gap-4 mb-8">
+            {categories.map((category) => (
+              <CategoryCard
                 key={category.id}
                 name={category.name}
                 onClick={() => handleCategoryClick(category.id)}
-                />
-          ))}
+              />
+            ))}
+          </div>
         </div>
-
-        {/* Additional Sidebar Items */}
-        <div className="filters mb-8">
-          <h2 className="text-lg font-semibold mb-2">Filters</h2>
-          <button className="block w-full py-2 px-4 mb-2 bg-gray-200 rounded">
-            Filter by Price
-          </button>
-          <button className="block w-full py-2 px-4 bg-gray-200 rounded">
-            Filter by Rating
-          </button>
-        </div>
-
-        <div className="popular-categories">
-          <h2 className="text-lg font-semibold mb-2">Popular Categories</h2>
-          <ul className="list-disc pl-5">
-            <li>Electronics</li>
-            <li>Fashion</li>
-            <li>Home & Furniture</li>
-            <li>Books</li>
-          </ul>
-        </div>
-      </div>
+      )}
 
       {/* Product Section */}
       <div className="products w-3/4">
