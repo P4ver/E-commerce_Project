@@ -169,7 +169,7 @@ const ProductComponent = () => {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>k</TableCell>
+                <TableCell></TableCell>
                 <TableCell>Name</TableCell>
                 <TableCell>Price</TableCell>
                 <TableCell>Description</TableCell>
@@ -188,7 +188,8 @@ const ProductComponent = () => {
                 .map((product) => (
                   <TableRow key={product.id}>
                     <TableCell>
-                      <img src={`${API_LINK}/${product.image}`} alt="" />
+                      {/* <img src={`${API_LINK}/${product.image}`} alt="" /> */}
+                      <img className='max-h-16' src={`${product.image}`} alt="" />
                     </TableCell>
                     <TableCell>{product.name}</TableCell>
                     <TableCell>${product.price}</TableCell>
