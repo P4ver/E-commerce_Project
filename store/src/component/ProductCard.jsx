@@ -2,6 +2,16 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 function ProductCard({ product }) {
+  const handleAddToCart = () => {
+    // Get the existing cart from localStorage or initialize an empty array
+    const existingCart = JSON.parse(localStorage.getItem('cart')) || [];
+    // Add the selected product to the cart
+    const updatedCart = [...existingCart, product];
+    // Save the updated cart back to localStorage
+    localStorage.setItem('cart', JSON.stringify(updatedCart));
+    alert('Product added to cart!');
+  };
+  
   return (
     <article className="product-card cart-type-neon h-full transform overflow-hidden rounded border border-gray-200 bg-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg">
       <div className="relative flex h-48 w-auto cursor-pointer items-center justify-center sm:h-64">
@@ -36,6 +46,12 @@ function ProductCard({ product }) {
               </svg>
             </span>
           </Link>
+          <button
+              onClick={handleAddToCart} 
+              type="button"
+               className='my-1 p-2 border bg-sky-800 text-white w-full hover:bg-sky-500 rounded-md'>
+              Add to cart
+          </button>
         </div>
       </header>
     </article>
