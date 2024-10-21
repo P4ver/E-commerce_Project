@@ -6,18 +6,20 @@ import './App.css'
 import ProductPage from './component/productPage';
 import Cart from './component/cart';
 import CheckoutPage from './component/checkoutPage';
+import Footer from './component/footer';
 
 function App() {
   return (
     <>
+      <BrowserRouter>
       <NavBare/>
-       <BrowserRouter>
         <Routes>
           <Route exact path="/" element={<Home />} />
           <Route exact path="/product/:id" element={<ProductPage />} />
           <Route exact path="/cart" element={<Cart />} />
-          <Route exact path="/check" element={<CheckoutPage />} />
+          <Route exact path="/checkout" element={<CheckoutPage />} />
         </Routes>
+        <Footer/>
       </BrowserRouter>
 
     </>
