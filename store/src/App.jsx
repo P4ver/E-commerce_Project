@@ -7,6 +7,7 @@ import ProductPage from './component/productPage';
 import Cart from './component/cart';
 import CheckoutPage from './component/checkoutPage';
 import Footer from './component/footer';
+import Login from './component/login';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
       <NavBare/>
         <Routes>
           <Route exact path="/" element={<Home />} />
+          <Route exact path="/login" element={<Login />} />
           <Route exact path="/product/:id" element={<ProductPage />} />
           <Route exact path="/cart" element={<Cart />} />
           <Route exact path="/checkout" element={<CheckoutPage />} />
