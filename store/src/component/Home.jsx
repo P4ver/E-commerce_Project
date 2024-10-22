@@ -6,6 +6,10 @@ import ProductCard from './ProductCard';
 import CategoryCard from './categoryCard';
 import Slide from './Slider';
 import delevry from './images/delevry.jpg';
+import Carousel from 'react-multi-carousel';
+import 'react-multi-carousel/lib/styles.css';
+import SliderHome from './SliderHome';
+
 function Home() {
   const dispatch = useDispatch();
   const { products, status, error } = useSelector((state) => state.products);
@@ -40,9 +44,27 @@ function Home() {
   };
   return (
     <div className='bg-gray-50'>
-      <div className='flex justify-center w-3/4 mx-auto'>
+    {/* <div className='flex flex-col md:flex-row justify-center w-3/4 mx-auto'> */}
+    <div className='md:flex w-3/4 mx-auto'>
+
+      <div className='w-full mx-auto md:w-3/4 order-1 md:order-2'>
+        <SliderHome/>
+      </div>
+
+      <div className='flex my-9 md:m-0 justify-center md:w-[250px]  md:flex-col gap-8'>
+        <div className='h-44 w-1/2 md:w-full bg-white border'>
+          test
+        </div>
+        <div className='h-44 w-1/2 md:w-full bg-white border'>
+          test
+        </div>
+      </div>
+    </div>
+
+      
+    {/* </div> */}
+      <div className='flex justify-center w-3/4 mx-auto md:my-8'>
         <Slide/>
-        {/* <img className='w-96' src={delevry} alt="" /> */}
       </div>
       
       <div className="home p-4">
